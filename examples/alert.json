@@ -1,0 +1,20 @@
+{
+    "client": {
+        "client_id": "C_FRAUD",
+        "age": 45,
+        "income_annual": 50000,
+        "employment_status": "CDI",
+        "debt_to_income": 0.30,
+        "credit_history_length_months": 60,
+        "num_open_accounts": 4,
+        "late_payments_12m": 0
+    },
+    "transaction": {
+        "amount": 1200.0,
+        "merchant_category": "electronics",
+        "country": "US",
+        "hour": 3,
+        "is_new_device": true,
+        "distance_from_home_km": 500.0
+    }
+}

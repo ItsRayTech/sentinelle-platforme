@@ -1,0 +1,20 @@
+{
+    "client": {
+        "client_id": "C_GOOD",
+        "age": 34,
+        "income_annual": 65000,
+        "employment_status": "CDI",
+        "debt_to_income": 0.20,
+        "credit_history_length_months": 72,
+        "num_open_accounts": 3,
+        "late_payments_12m": 0
+    },
+    "transaction": {
+        "amount": 120.5,
+        "merchant_category": "groceries",
+        "country": "FR",
+        "hour": 14,
+        "is_new_device": false,
+        "distance_from_home_km": 5.0
+    }
+}

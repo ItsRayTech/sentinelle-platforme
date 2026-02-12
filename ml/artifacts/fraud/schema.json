@@ -1,0 +1,35 @@
+{
+  "input_features": {
+    "numeric": [
+      "amount",
+      "hour",
+      "distance_from_home_km"
+    ],
+    "categorical": [
+      "merchant_category",
+      "country"
+    ],
+    "bool": [
+      "is_new_device"
+    ]
+  },
+  "merchant_category_allowed": [
+    "groceries",
+    "electronics",
+    "travel",
+    "fuel",
+    "fashion",
+    "restaurants",
+    "services"
+  ],
+  "country_allowed": [
+    "FR",
+    "BE",
+    "DE",
+    "ES",
+    "IT",
+    "NL",
+    "GB",
+    "US"
+  ]
+}

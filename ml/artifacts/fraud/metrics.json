@@ -1,0 +1,25 @@
+{
+  "model": "isolation_forest",
+  "auc": 0.5940196346582208,
+  "avg_precision": 0.0478207205464793,
+  "fraud_rate": 0.0307875,
+  "data_config": {
+    "n_samples": 80000,
+    "fraud_rate": 0.03,
+    "seed": 42
+  },
+  "features_numeric": [
+    "amount",
+    "hour",
+    "distance_from_home_km"
+  ],
+  "features_categorical": [
+    "merchant_category",
+    "country"
+  ],
+  "features_bool": [
+    "is_new_device"
+  ],
+  "target": "is_fraud",
+  "score_normalization": "minmax_on_test (MVP)"
+}

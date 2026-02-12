@@ -1,0 +1,20 @@
+{
+    "client": {
+        "client_id": "C_RISK",
+        "age": 22,
+        "income_annual": 15000,
+        "employment_status": "SANS_EMPLOI",
+        "debt_to_income": 0.60,
+        "credit_history_length_months": 12,
+        "num_open_accounts": 1,
+        "late_payments_12m": 2
+    },
+    "transaction": {
+        "amount": 50.0,
+        "merchant_category": "groceries",
+        "country": "FR",
+        "hour": 10,
+        "is_new_device": false,
+        "distance_from_home_km": 2.0
+    }
+}

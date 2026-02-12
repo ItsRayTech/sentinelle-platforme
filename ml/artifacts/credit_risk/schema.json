@@ -1,0 +1,23 @@
+{
+  "input_features": {
+    "numeric": [
+      "age",
+      "income_annual",
+      "debt_to_income",
+      "credit_history_length_months",
+      "num_open_accounts",
+      "late_payments_12m"
+    ],
+    "categorical": [
+      "employment_status"
+    ]
+  },
+  "employment_status_allowed": [
+    "CDI",
+    "CDD",
+    "INDEPENDANT",
+    "ETUDIANT",
+    "SANS_EMPLOI",
+    "RETRAITE"
+  ]
+}

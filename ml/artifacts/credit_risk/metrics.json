@@ -1,0 +1,34 @@
+{
+  "best_model": "logreg",
+  "best_metrics": {
+    "auc": 0.762066800799814,
+    "recall_default": 0.6702937976060935
+  },
+  "logreg_metrics": {
+    "auc": 0.762066800799814,
+    "recall_default": 0.6702937976060935
+  },
+  "xgb_metrics": {
+    "auc": 0.7534368773170591,
+    "recall_default": 0.08378672470076169
+  },
+  "default_rate": 0.09194,
+  "data_config": {
+    "n_samples": 50000,
+    "seed": 42
+  },
+  "features_numeric": [
+    "age",
+    "income_annual",
+    "debt_to_income",
+    "credit_history_length_months",
+    "num_open_accounts",
+    "late_payments_12m"
+  ],
+  "features_categorical": [
+    "employment_status"
+  ],
+  "target": "default_flag",
+  "threshold": 0.5,
+  "mlflow_run_id": "81306944a2ac412383e1cc9e55e6f9d1"
+}
