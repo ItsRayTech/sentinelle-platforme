@@ -5,6 +5,8 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY app /app/app
+COPY app/templates /app/app/templates
+COPY app/static /app/app/static
 
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8000

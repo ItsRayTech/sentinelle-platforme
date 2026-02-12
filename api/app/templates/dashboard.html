@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Sentinelle — Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🎯 Décision Engine</h2>
+    <p>Soumettez un dossier client pour obtenir une décision en temps réel.</p>
+</div>
+
+<form method="POST" action="/ui/decide">
+    <div class="grid-2">
+        <!-- Client Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">👤</span>
+                <h3>Profil Client</h3>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="client_id">ID Client</label>
+                    <input type="text" id="client_id" name="client_id" value="{{ form.client_id or 'CLI-2024-0042' }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Âge</label>
+                    <input type="number" id="age" name="age" min="18" max="100" value="{{ form.age or 35 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="income_annual">Revenu annuel (€)</label>
+                    <input type="number" id="income_annual" name="income_annual" step="1" min="1"
+                        value="{{ form.income_annual or 55000 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="employment_status">Statut emploi</label>
+                    <select id="employment_status" name="employment_status" required>
+                        {% for status in ["CDI", "CDD", "INDEPENDANT", "ETUDIANT", "SANS_EMPLOI", "RETRAITE"] %}
+                        <option value="{{ status }}" {{ 'selected' if form.employment_status==status else ('selected' if
+                            not form.employment_status and status=='CDI' else '' ) }}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="debt_to_income">Ratio dette/revenu</label>
+                    <input type="number" id="debt_to_income" name="debt_to_income" step="0.01" min="0" max="2"
+                        value="{{ form.debt_to_income or 0.25 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="credit_history_length_months">Historique crédit (mois)</label>
+                    <input type="number" id="credit_history_length_months" name="credit_history_length_months" min="0"
+                        max="600" value="{{ form.credit_history_length_months or 120 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="num_open_accounts">Comptes ouverts</label>
+                    <input type="number" id="num_open_accounts" name="num_open_accounts" min="0" max="50"
+                        value="{{ form.num_open_accounts or 3 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="late_payments_12m">Retards de paiement (12 mois)</label>
+                    <input type="number" id="late_payments_12m" name="late_payments_12m" min="0" max="60"
+                        value="{{ form.late_payments_12m or 0 }}" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">💳</span>
+                <h3>Transaction</h3>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="amount">Montant (€)</label>
+                    <input type="number" id="amount" name="amount" step="0.01" min="1"
+                        value="{{ form.amount or 150.00 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="merchant_category">Catégorie marchand</label>
+                    <input type="text" id="merchant_category" name="merchant_category"
+                        value="{{ form.merchant_category or 'electronics' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Pays (ISO)</label>
+                    <input type="text" id="country" name="country" maxlength="2" value="{{ form.country or 'FR' }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="hour">Heure (0-23)</label>
+                    <input type="number" id="hour" name="hour" min="0" max="23" value="{{ form.hour or 14 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="distance_from_home_km">Distance domicile (km)</label>
+                    <input type="number" id="distance_from_home_km" name="distance_from_home_km" step="0.1" min="0"
+                        value="{{ form.distance_from_home_km or 5.0 }}" required>
+                </div>
+                <div class="form-group checkbox-row">
+                    <input type="checkbox" id="is_new_device" name="is_new_device" {{ 'checked' if form.is_new_device
+                        else '' }}>
+                    <label for="is_new_device">Nouvel appareil</label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    ⚡ Analyser le dossier
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    Réinitialiser
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% if result %}
+<!-- ---- RESULT SECTION ---- -->
+<div class="result-section">
+    <div class="card">
+        <div class="card-header">
+            <span class="card-icon">📊</span>
+            <h3>Résultat de la Décision</h3>
+        </div>
+
+        <!-- Decision Badge -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            {% set badge_class = {
+            'ACCEPT': 'badge-accept',
+            'REJECT': 'badge-reject',
+            'REVIEW': 'badge-review',
+            'ALERT': 'badge-alert'
+            } %}
+            {% set badge_icon = {
+            'ACCEPT': '✅',
+            'REJECT': '❌',
+            'REVIEW': '⚠️',
+            'ALERT': '🚨'
+            } %}
+            <span class="decision-badge {{ badge_class.get(result.decision, 'badge-review') }}">
+                {{ badge_icon.get(result.decision, '❓') }} {{ result.decision }}
+            </span>
+        </div>
+
+        <!-- Scores -->
+        <div class="scores-grid">
+            <div class="score-card">
+                <div class="score-label">Score Risque (Crédit)</div>
+                {% set risk_pct = (result.risk_score * 100)|round|int %}
+                {% set risk_class = 'low' if risk_pct < 40 else ('medium' if risk_pct < 70 else 'high' ) %} <div
+                    class="score-value score-{{ risk_class }}">{{ risk_pct }}%
+            </div>
+            <div class="score-bar">
+                <div class="score-bar-fill fill-{{ risk_class }}" style="width: {{ risk_pct }}%;"></div>
+            </div>
+        </div>
+        <div class="score-card">
+            <div class="score-label">Score Fraude</div>
+            {% set fraud_pct = (result.fraud_score * 100)|round|int %}
+            {% set fraud_class = 'low' if fraud_pct < 40 else ('medium' if fraud_pct < 70 else 'high' ) %} <div
+                class="score-value score-{{ fraud_class }}">{{ fraud_pct }}%
+        </div>
+        <div class="score-bar">
+            <div class="score-bar-fill fill-{{ fraud_class }}" style="width: {{ fraud_pct }}%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SHAP Features -->
+<div class="grid-2" style="margin-top: 20px;">
+    <div>
+        <h4
+            style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+            Facteurs Crédit (SHAP)</h4>
+        <ul class="shap-list">
+            {% for feat in result.explanations_preview.credit_top_features %}
+            <li class="shap-item">
+                <span class="shap-feature">{{ feat.feature }}</span>
+                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">{{
+                    feat.impact }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h4
+            style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+            Facteurs Fraude</h4>
+        <ul class="shap-list">
+            {% for feat in result.explanations_preview.fraud_top_features %}
+            <li class="shap-item">
+                <span class="shap-feature">{{ feat.feature }}</span>
+                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">{{
+                    feat.impact }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Agent Report -->
+{% if result.report_summary %}
+<div style="margin-top: 20px;">
+    <h4
+        style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+        🤖 Rapport Agent IA</h4>
+    <div class="agent-report">{{ result.report_summary }}</div>
+</div>
+{% endif %}
+
+<!-- Metadata -->
+<div class="meta-row">
+    <div class="meta-item"><strong>ID :</strong> {{ result.decision_id }}</div>
+    <div class="meta-item"><strong>Règle :</strong> {{ result.policy_rule }}</div>
+</div>
+</div>
+</div>
+{% endif %}
+
+{% endblock %}

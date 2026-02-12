@@ -154,7 +154,7 @@ def evaluate_model(model: Pipeline, X_test: pd.DataFrame, y_test: np.ndarray) ->
 
 
 def setup_mlflow() -> None:
-    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5001")
     mlflow.set_tracking_uri(tracking_uri)
     
     experiment_name = "credit-risk-prod"

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Sentinelle — Audit Trail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📋 Audit Trail</h2>
+    <p>Historique des {{ decisions|length }} dernières décisions tracées.</p>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-label">Total Décisions</div>
+        <div class="stat-value">{{ decisions|length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Acceptées</div>
+        <div class="stat-value" style="color: var(--accent-green);">{{ decisions|selectattr('decision', 'equalto',
+            'ACCEPT')|list|length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Rejetées</div>
+        <div class="stat-value" style="color: var(--accent-red);">{{ decisions|selectattr('decision', 'equalto',
+            'REJECT')|list|length }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Alertes</div>
+        <div class="stat-value" style="color: var(--accent-orange);">{{ decisions|selectattr('decision', 'equalto',
+            'ALERT')|list|length + decisions|selectattr('decision', 'equalto', 'REVIEW')|list|length }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-icon">🔍</span>
+        <h3>Décisions Récentes</h3>
+    </div>
+
+    {% if decisions %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Décision</th>
+                    <th>Date</th>
+                    <th>Décision</th>
+                    <th>Risk Score</th>
+                    <th>Fraud Score</th>
+                    <th>Règle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in decisions %}
+                <tr>
+                    <td style="font-family: 'SF Mono', monospace; font-size: 11px;">{{ d.decision_id }}</td>
+                    <td>{{ d.created_at.strftime('%d/%m/%Y %H:%M') if d.created_at else '—' }}</td>
+                    <td>
+                        {% set badge = {
+                        'ACCEPT': 'table-badge-accept',
+                        'REJECT': 'table-badge-reject',
+                        'REVIEW': 'table-badge-review',
+                        'ALERT': 'table-badge-alert'
+                        } %}
+                        <span class="table-badge {{ badge.get(d.decision, '') }}">{{ d.decision }}</span>
+                    </td>
+                    <td>{{ "%.1f"|format(d.risk_score * 100) }}%</td>
+                    <td>{{ "%.1f"|format(d.fraud_score * 100) }}%</td>
+                    <td style="font-size: 11px; color: var(--text-muted);">{{ d.policy_rule }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="icon">📭</div>
+        <p>Aucune décision enregistrée.<br>Soumettez un dossier depuis le Dashboard pour commencer.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

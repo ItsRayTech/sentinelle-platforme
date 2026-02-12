@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sentinelle{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo">S</div>
+                <div>
+                    <h1>Sentinelle</h1>
+                    <span>Risque & Fraude</span>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li>
+                    <a href="/" class="{% if active_page == 'dashboard' %}active{% endif %}">
+                        <span class="icon">🎯</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/ui/audit" class="{% if active_page == 'audit' %}active{% endif %}">
+                        <span class="icon">📋</span>
+                        <span>Audit Trail</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/docs" target="_blank">
+                        <span class="icon">📡</span>
+                        <span>API Docs</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="version">Sentinelle v1.0.0</div>
+                <div class="status">Système opérationnel</div>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
