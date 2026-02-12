@@ -22,7 +22,7 @@ Ce projet propose une **plateforme de décision** capable d'évaluer le risque d
 docker compose up --build
 curl -X POST http://localhost:8000/decision -H "Content-Type: application/json" -d @examples/accept.json
 open http://localhost:8000/docs
-open http://localhost:5000
+open http://localhost:5001
 open http://localhost:3000
 ```
 
@@ -175,7 +175,7 @@ curl -X POST "http://localhost:8000/review/dcn_..." \
 - AUC Fraud ≈ > 0.90 (synthetic benchmark)
 
 Toutes les expériences sont visibles dans MLflow :
-http://localhost:5000
+http://localhost:5001
 
 ---
 

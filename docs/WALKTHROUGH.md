@@ -41,14 +41,14 @@ docker compose up -d --build
 ```
 
 - **API** : [http://localhost:8000/docs](http://localhost:8000/docs)
-- **MLflow** : [http://localhost:5000](http://localhost:5000)
+- **MLflow** : [http://localhost:5001](http://localhost:5001)
 - **Agent** : [http://localhost:9000/health](http://localhost:9000/health)
 
 **(Optionnel) Vérifier rapidement :**
 ```bash
 curl -s http://localhost:8000/docs >/dev/null && echo "API OK"
 curl -s http://localhost:9000/health && echo ""
-curl -s http://localhost:5000 >/dev/null && echo "MLflow OK"
+curl -s http://localhost:5001 >/dev/null && echo "MLflow OK"
 ```
 
 ### 2. Entraîner les modèles (si nécessaire)
@@ -108,7 +108,7 @@ curl -X POST "http://localhost:8000/decision" \
 ---
 
 ## 📊 Exploration MLOps
-1. Accédez à **MLflow** sur [http://localhost:5000](http://localhost:5000).
+1. Accédez à **MLflow** sur [http://localhost:5001](http://localhost:5001).
 2. Ouvrez l'expérience **credit-risk**.
 3. Cliquez sur un Run pour voir :
    - **Metrics** : AUC, Recall, Default Rate.
