@@ -7,7 +7,7 @@ class PolicyResult:
     rule: str
 
 def apply_policy(risk_score: float, fraud_score: float) -> PolicyResult:
-    # Fraud has priority: ALERT overrides credit decision
+    # La fraude est prioritaire : ALERT surcharge la décision de crédit
     if fraud_score >= settings.fraud_alert_threshold:
         return PolicyResult("ALERT", f"fraud_score >= {settings.fraud_alert_threshold} => ALERT")
 

@@ -19,12 +19,12 @@ _FRAUD_VERSION: Optional[str] = None
 
 
 def _find_model_path() -> Path:
-    # 1) Docker mount path
+    # 1) Chemin de montage Docker
     docker_path = Path("/ml/artifacts/credit_risk/model.joblib")
     if docker_path.exists():
         return docker_path
 
-    # 2) Robust local search: walk up and find repo root containing /ml/artifacts/...
+    # 2) Recherche locale robuste : remonter à la racine du repo contenant /ml/artifacts/...
     here = Path(__file__).resolve()
     for p in here.parents:
         candidate = p / "ml" / "artifacts" / "credit_risk" / "model.joblib"
@@ -47,7 +47,7 @@ def _load_model() -> object:
     model_path = _find_model_path()
     _MODEL = joblib.load(model_path)
 
-    # Optional: load version metadata
+    # Optionnel : charger les métadonnées de version
     metrics_path = model_path.parent / "metrics.json"
     if metrics_path.exists():
         try:
@@ -103,11 +103,13 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
     """
     Compute local SHAP values for a single prediction using LinearExplainer.
     Maps One-Hot Encoded features back to original feature names.
+    # Calculer les valeurs SHAP locales pour une prédiction unique via LinearExplainer.
+    # Mappe les features One-Hot Encoded vers les noms de features originaux.
     """
     import shap
     global _EXPL_MODEL
 
-    # 1. Access parts of pipeline
+    # 1. Accéder aux parties du pipeline
     # Expected structure: Pipeline(steps=[('preprocess', ColumnTransformer), ('model', LogisticRegression)])
     try:
         preprocessor = model_pipeline.named_steps["preprocess"]
@@ -116,10 +118,10 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
         print(f"ERROR: Pipeline structure mismatch: {e}")
         return []
 
-    # 2. Transform input to get the actual features used by model
+    # 2. Transformer l'entrée pour obtenir les features réelles utilisées par le modèle
     X_transformed = preprocessor.transform(X_df)
     
-    # 3. Get feature names from preprocessor
+    # 3. Obtenir les noms de features depuis le préprocesseur
     # New in sklearn 1.0+: get_feature_names_out
     try:
         feature_names = preprocessor.get_feature_names_out()
@@ -127,12 +129,12 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
         # Fallback if old sklearn or incompatible
         feature_names = [f"feat_{i}" for i in range(X_transformed.shape[1])]
 
-    # 4. Create or reuse Explainer
-    # LinearExplainer is fast and lightweight for LogReg
+    # 4. Créer ou réutiliser l'Explainer
+    # LinearExplainer est rapide et léger pour la Régression Logistique
     if _EXPL_MODEL is None:
-        # Crucial: LinearExplainer needs a background dataset to compare against.
-        # Since we use StandardScaler, the mean is approx 0.
-        # We use a synthetic zero background to represent the "average" customer.
+        # Crucial : LinearExplainer a besoin d'un dataset de référence pour comparer.
+        # Puisque nous utilisons StandardScaler, la moyenne est approx 0.
+        # Nous utilisons un fond synthétique zéro pour représenter le client "moyen".
         background = np.zeros((1, X_transformed.shape[1]))
         
         _EXPL_MODEL = shap.LinearExplainer(
@@ -141,7 +143,7 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
             feature_perturbation="interventional"
         )
     
-    # 5. Compute SHAP values
+    # 5. Calculer les valeurs SHAP
     shap_values = _EXPL_MODEL.shap_values(X_transformed)
     # print(f"DEBUG: SHAP values raw type: {type(shap_values)}, shape: {np.shape(shap_values)}")
 
@@ -159,13 +161,13 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
     if vals.ndim > 1:
         vals = vals[0]
         
-    # 6. Post-process: Map back OHE key -> Original key
-    # e.g. "employment_status_CDI" -> "employment_status"
-    # We want to aggregate impacts per original feature
+    # 6. Post-traitement : Mapper clé OHE -> Clé originale
+    # ex: "employment_status_CDI" -> "employment_status"
+    # Nous voulons agréger les impacts par feature originale
     
     impacts = {}
     for name, value in zip(feature_names, vals):
-        # Heuristic to find original name: split by underscore?
+        # Heuristique pour trouver le nom original : diviser par underscore ?
         # Better: use the feature prefixes from ColumnTransformer if possible.
         # Standard: "cat__employment_status_CDI" / "num__age"
         
@@ -189,15 +191,15 @@ def compute_shap_values(model_pipeline, X_df) -> list[dict]:
             
         impacts[original_name] = impacts.get(original_name, 0.0) + value
 
-    # 7. Convert to list of FeatureImpact
-    # Sort by absolute impact
+    # 7. Convertir en liste de FeatureImpact
+    # Trier par impact absolu
     sorted_impacts = sorted(impacts.items(), key=lambda x: abs(x[1]), reverse=True)
     
     result = []
     for k, v in sorted_impacts:
         # direction
         direction = "+" if v > 0 else "-"
-        # Minimal filter: only show if impact is significant (> 0.01?)
+        # Filtre minimal : afficher seulement si l'impact est significatif (> 0.01 ?)
         if abs(v) > 0.01:
             result.append({"feature": k, "impact": direction, "value": float(v)})
     
@@ -248,12 +250,12 @@ def predict_risk_and_fraud(payload: DecisionRequest) -> tuple[float, float, dict
     }
     Xf = pd.DataFrame([X_fraud])
     
-    # This logic assumes IsolationForest or similar
-    # anomaly score -> normalized 0..1
+    # Cette logique suppose une Isolation Forest ou similaire
+    # score d'anomalie -> normalisé 0..1
     normal_score = fraud_model.decision_function(Xf)
     anomaly_score = -float(normal_score[0])
 
-    # MVP normalization
+    # Normalisation MVP
     fraud_score = 1.0 / (1.0 + np.exp(-anomaly_score))
     fraud_score = float(np.clip(fraud_score, 0.0, 1.0))
 

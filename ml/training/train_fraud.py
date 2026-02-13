@@ -15,7 +15,7 @@ from sklearn.ensemble import IsolationForest
 
 
 # -----------------------------
-# 1) Synthetic fraud generator
+# 1) Générateur de fraudes synthétiques
 # -----------------------------
 @dataclass
 class FraudDataConfig:
@@ -35,8 +35,8 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
 def generate_synthetic_fraud_data(cfg: FraudDataConfig) -> pd.DataFrame:
     rng = np.random.default_rng(cfg.seed)
 
-    # Core features similar to your API payload
-    amount = rng.lognormal(mean=4.2, sigma=0.9, size=cfg.n_samples)  # heavy tail
+    # Features principales similaires au payload API
+    amount = rng.lognormal(mean=4.2, sigma=0.9, size=cfg.n_samples)  # queue lourde
     amount = np.clip(amount, 1, 5000)
 
     merchant_category = rng.choice(MERCHANT_CATS, size=cfg.n_samples, p=[0.28, 0.16, 0.08, 0.12, 0.12, 0.16, 0.08])
@@ -47,13 +47,13 @@ def generate_synthetic_fraud_data(cfg: FraudDataConfig) -> pd.DataFrame:
     distance_from_home_km = rng.gamma(shape=2.0, scale=12.0, size=cfg.n_samples)  # mostly small distances
     distance_from_home_km = np.clip(distance_from_home_km, 0, 2000)
 
-    # Fraud likelihood model (synthetic):
+    # Modèle de probabilité de fraude (synthétique) :
     night = ((hour >= 23) | (hour <= 5)).astype(float)
     high_amount = (amount > 800).astype(float)
     far = (distance_from_home_km > 200).astype(float)
     risky_country = np.isin(country, ["US"]).astype(float)
 
-    # electronics + new device + night is a classic suspicious pattern
+    # électronique + nouvel appareil + nuit est un motif suspect classique
     is_electronics = (merchant_category == "electronics").astype(float)
     combo = is_electronics * is_new_device.astype(float) * night
 
@@ -69,8 +69,8 @@ def generate_synthetic_fraud_data(cfg: FraudDataConfig) -> pd.DataFrame:
 
     p = sigmoid(logit)
 
-    # Calibrate to desired fraud rate roughly
-    # Shift logits so that mean(p) ~ fraud_rate
+    # Calibrer grossièrement au taux de fraude désiré
+    # Décaler les logits pour que la moyenne(p) ~ taux_fraude
     current_rate = float(p.mean())
     if current_rate > 0:
         shift = np.log(cfg.fraud_rate / (1 - cfg.fraud_rate)) - np.log(current_rate / (1 - current_rate))
@@ -137,8 +137,8 @@ def main():
 
     preprocessor = build_preprocessor()
 
-    # IsolationForest is unsupervised: we train on "mostly normal" data
-    # For MVP: filter out fraud in training set to simulate real scenario
+    # IsolationForest est non supervisé : on entraîne sur des données "principalement normales"
+    # Pour le MVP : filtrer la fraude dans le jeu d'entraînement pour simuler un scénario réel
     X_train_normal = X_train[y_train == 0]
 
     iso = IsolationForest(
@@ -151,15 +151,15 @@ def main():
     model = Pipeline(steps=[("preprocess", preprocessor), ("model", iso)])
     model.fit(X_train_normal)
 
-    # Scores: IsolationForest gives anomaly score via decision_function (higher = more normal)
-    # We'll convert to anomaly probability-like score in [0,1]:
-    normal_score = model.decision_function(X_test)  # higher means normal
+    # Scores : IsolationForest donne un score d'anomalie via decision_function (plus haut = plus normal)
+    # On convertit en "probabilité d'anomalie" dans [0,1] :
+    normal_score = model.decision_function(X_test)  # plus haut signifie normal
     anomaly_score = -normal_score
-    # Normalize to [0,1] for a stable API output
+    # Normaliser à [0,1] pour une sortie API stable
     min_s, max_s = float(anomaly_score.min()), float(anomaly_score.max())
     fraud_score = (anomaly_score - min_s) / (max_s - min_s + 1e-9)
 
-    # Evaluate vs labels (we do have synthetic labels)
+    # Évaluer vs labels (nous avons des labels synthétiques)
     auc = roc_auc_score(y_test, fraud_score)
     ap = average_precision_score(y_test, fraud_score)
 

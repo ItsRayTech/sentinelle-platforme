@@ -3,7 +3,7 @@ from .settings import settings
 from .prompt import build_prompt
 
 def _mock_report(payload: dict) -> str:
-    # Deterministic, CI-friendly output
+    # Sortie déterministe pour la CI
     decision = payload["decision"]
     risk = payload["risk_score"]
     fraud = payload["fraud_score"]

@@ -13,5 +13,5 @@ async def generate_report(payload: dict) -> Optional[str]:
             data = r.json()
             return data.get("report_summary")
     except Exception:
-        # In MVP: do not fail the decision endpoint if agent fails
+        # Pour le MVP : ne pas faire échouer l'endpoint de décision si l'agent échoue
         return None

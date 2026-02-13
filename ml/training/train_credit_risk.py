@@ -22,7 +22,7 @@ except Exception as e:
 
 
 # -----------------------------
-# 1) Synthetic data generator
+# 1) Générateur de données synthétiques
 # -----------------------------
 @dataclass
 class DataConfig:
@@ -42,8 +42,8 @@ def generate_synthetic_credit_data(cfg: DataConfig) -> pd.DataFrame:
 
     age = rng.integers(18, 75, size=cfg.n_samples)
 
-    # Income: log-normal-ish distribution, depends a bit on age
-    base_income = rng.lognormal(mean=10.6, sigma=0.35, size=cfg.n_samples)  # ~ 40k-70k median-ish
+    # Revenu : distribution log-normale, dépend un peu de l'âge
+    base_income = rng.lognormal(mean=10.6, sigma=0.35, size=cfg.n_samples)  # ~ 40k-70k médiane
     age_factor = np.clip((age - 25) / 40, 0, 1)
     income_annual = base_income * (0.85 + 0.35 * age_factor)
     income_annual = np.clip(income_annual, 12000, 200000)
@@ -54,26 +54,26 @@ def generate_synthetic_credit_data(cfg: DataConfig) -> pd.DataFrame:
         p=[0.55, 0.15, 0.12, 0.06, 0.05, 0.07],
     )
 
-    # debt_to_income: higher for low income / unstable employment
+    # debt_to_income : plus élevé pour revenus faibles / emploi instable
     base_dti = rng.beta(a=2.0, b=5.0, size=cfg.n_samples)  # mostly < 0.5
     emp_risk = np.array([1.0 if s in ("SANS_EMPLOI", "ETUDIANT") else 0.0 for s in employment_status])
     dti = base_dti + 0.15 * emp_risk + 0.05 * (income_annual < 25000)
     debt_to_income = np.clip(dti, 0.0, 1.5)
 
-    # credit history length in months: correlated with age
+    # historique crédit en mois : corrélé avec l'âge
     credit_history_length_months = np.clip((age - 18) * 12 + rng.normal(0, 24, cfg.n_samples), 0, 600).astype(int)
 
-    # number of open accounts: depends on history
+    # nombre de comptes ouverts : dépend de l'historique
     lam = np.clip(1.5 + credit_history_length_months / 120, 1.5, 8.0)
     num_open_accounts = rng.poisson(lam=lam, size=cfg.n_samples)
     num_open_accounts = np.clip(num_open_accounts, 0, 30)
 
-    # late payments: more likely if high DTI / unemployment
+    # retards de paiement : plus probables si DTI élevé / chômage
     late_base = rng.poisson(lam=0.25 + 1.0 * (debt_to_income > 0.5) + 1.5 * emp_risk, size=cfg.n_samples)
     late_payments_12m = np.clip(late_base, 0, 12)
 
-    # Create default probability using a logit function
-    # (This is synthetic, but "realistic-ish": DTI & late payments dominate, income reduces risk)
+    # Créer une probabilité de défaut via fonction logit
+    # (Synthétique mais "réaliste" : DTI & retards dominent, le revenu réduit le risque)
     logit = (
         -2.2
         + 2.3 * np.clip(debt_to_income, 0, 1.0)
@@ -145,8 +145,8 @@ def evaluate_model(model: Pipeline, X_test: pd.DataFrame, y_test: np.ndarray) ->
     proba = model.predict_proba(X_test)[:, 1]
     auc = roc_auc_score(y_test, proba)
 
-    # Decision threshold for recall (default class=1)
-    # In credit risk, recall on default is often important → choose threshold 0.5 in MVP
+    # Seuil de décision pour le rappel (classe défaut=1)
+    # En risque crédit, le rappel sur défaut est souvent important -> seuil 0.5 pour le MVP
     pred = (proba >= 0.5).astype(int)
     recall = recall_score(y_test, pred, pos_label=1)
 
@@ -158,12 +158,12 @@ def setup_mlflow() -> None:
     mlflow.set_tracking_uri(tracking_uri)
     
     experiment_name = "credit-risk-prod"
-    # Ensure artifact location is absolute path on host machine that matches docker mount
-    # If run locally, artifacts should go to ./ml/mlflow/artifacts
-    # Docker sees /ml/mlflow/artifacts, Host sees $(pwd)/ml/mlflow/artifacts
+    # S'assurer que l'emplacement des artifacts est un chemin absolu sur la machine hôte
+    # Si lancé localement, les artifacts vont dans ./ml/mlflow/artifacts
+    # Docker voit /ml/mlflow/artifacts, l'hôte voit $(pwd)/ml/mlflow/artifacts
     
-    # Simple fix: Use sqlite for tracking but file:// URI for artifacts needs shared filesystem
-    # Since we mount ./ml:/ml, we can just use the absolute path on the host.
+    # Correctif simple : Utiliser sqlite pour le tracking mais file:// URI pour les artifacts nécessite un filesystem partagé
+    # Comme nous montons ./ml:/ml, nous pouvons utiliser le chemin absolu sur l'hôte.
     
     artifact_path = Path(__file__).parents[2] / "mlflow" / "artifacts"
     artifact_uri = f"file://{artifact_path.resolve()}"

@@ -18,7 +18,7 @@ def explain(decision_id: str, db: Session = Depends(get_db)):
     if not row:
         raise HTTPException(status_code=404, detail="decision_id not found")
 
-    # MVP: return the preview as "shap top" until real SHAP is implemented
+    # MVP : retourner l'aperçu comme "shap top" jusqu'à ce que le vrai SHAP soit implémenté
     credit = [FeatureImpact(**x) for x in row.explanations_preview.get("credit_top_features", [])]
     fraud = [FeatureImpact(**x) for x in row.explanations_preview.get("fraud_top_features", [])]
 

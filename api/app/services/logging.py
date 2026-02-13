@@ -5,12 +5,12 @@ from ..db import Decision
 from ..settings import settings
 
 def hash_client_id(client_id: str) -> str:
-    # Pseudonymization for GDPR: do not store raw client identifiers
+    # Pseudonymisation pour le RGPD : ne pas stocker les identifiants clients bruts
     msg = (settings.client_id_salt + "|" + client_id).encode("utf-8")
     return hashlib.sha256(msg).hexdigest()
 
 def build_decision_id() -> str:
-    # Simple unique-ish id; can be replaced by UUID later
+    # ID simple unique ; peut être remplacé par un UUID plus tard
     now = datetime.utcnow().strftime("%Y%m%d_%H%M%S_%f")
     return f"dcn_{now}"
 

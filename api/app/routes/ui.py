@@ -63,7 +63,7 @@ async def ui_decide(
     is_new_device: Optional[str] = Form(None),
     db: Session = Depends(get_db),
 ):
-    # Build form dict for re-populating the form
+    # Construire le dictionnaire pour re-peupler le formulaire
     form_data = {
         "client_id": client_id,
         "age": age,
@@ -81,7 +81,7 @@ async def ui_decide(
         "is_new_device": is_new_device == "on",
     }
 
-    # Build Pydantic models
+    # Construire les modèles Pydantic
     payload = DecisionRequest(
         client=ClientPayload(
             client_id=client_id,
@@ -103,7 +103,7 @@ async def ui_decide(
         ),
     )
 
-    # Run the decision pipeline (same logic as the API route)
+    # Exécuter le pipeline de décision (même logique que la route API)
     risk_score, fraud_score, model_versions, shap_impacts = predict_risk_and_fraud(payload)
     pr = apply_policy(risk_score, fraud_score)
 
@@ -140,7 +140,7 @@ async def ui_decide(
         request_payload=payload.model_dump(),
     )
 
-    # Agent report
+    # Rapport Agent IA
     agent_payload = {
         "decision": pr.decision,
         "risk_score": risk_score,

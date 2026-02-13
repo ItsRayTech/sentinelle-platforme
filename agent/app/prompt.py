@@ -1,9 +1,9 @@
 def build_prompt(payload: dict) -> str:
     """
-    Anti-hallucination prompt:
-    - Use only provided data
-    - No invented facts
-    - Provide short, structured output
+    Prompt anti-hallucination :
+    - N'utiliser que les données fournies
+    - Pas de faits inventés
+    - Fournir une sortie courte et structurée
     """
     decision = payload["decision"]
     risk = payload["risk_score"]

@@ -6,10 +6,10 @@ class Settings(BaseSettings):
     app_name: str = "Sentinelle - Plateforme de Décision Risque & Fraude"
     environment: str = "dev"
 
-    # Database
+    # Base de données
     database_url: str = "sqlite:///./app.db"
 
-    # Policy thresholds (tweak later)
+    # Seuils de politique (ajuster plus tard)
     fraud_alert_threshold: float = 0.85
     risk_reject_threshold: float = 0.70
     risk_review_lower: float = 0.45
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     # Pseudonymization
     client_id_salt: str = "CHANGE_ME_SALT"
 
-    # Agent (optional, can remain disabled initially)
+    # Agent (optionnel, peut rester désactivé au début)
     agent_enabled: bool = False
     agent_base_url: str = "http://agent:9000"
 

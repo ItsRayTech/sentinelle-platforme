@@ -5,7 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ---- Light Theme (Default) ---- */
+/* ---- Thème Clair (Défaut) ---- */
 :root {
     --bg-primary: #f8f9fb;
     --bg-secondary: #ffffff;
@@ -43,7 +43,7 @@
     --sidebar-brand: #ffffff;
 }
 
-/* ---- Dark Theme ---- */
+/* ---- Thème Sombre ---- */
 [data-theme="dark"] {
     --bg-primary: #0f1117;
     --bg-secondary: #1a1d2e;
@@ -96,13 +96,13 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ---- Layout ---- */
+/* ---- Mise en page ---- */
 .layout {
     display: flex;
     min-height: 100vh;
 }
 
-/* ---- Sidebar (always dark for contrast) ---- */
+/* ---- Barre latérale (toujours sombre pour le contraste) ---- */
 .sidebar {
     width: 240px;
     background: var(--sidebar-bg);
@@ -233,7 +233,7 @@ body {
     }
 }
 
-/* ---- Theme Toggle ---- */
+/* ---- Bascule de thème ---- */
 .theme-toggle {
     display: flex;
     align-items: center;
@@ -262,7 +262,7 @@ body {
     text-align: center;
 }
 
-/* ---- Main Content ---- */
+/* ---- Contenu principal ---- */
 .main-content {
     margin-left: 240px;
     flex: 1;
@@ -287,7 +287,7 @@ body {
     margin-top: 2px;
 }
 
-/* ---- Cards ---- */
+/* ---- Cartes ---- */
 .card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -320,7 +320,7 @@ body {
     color: var(--text-primary);
 }
 
-/* ---- Form ---- */
+/* ---- Formulaire ---- */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -431,7 +431,7 @@ body {
     color: var(--text-primary);
 }
 
-/* ---- Two-column Layout ---- */
+/* ---- Mise en page deux colonnes ---- */
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -439,7 +439,7 @@ body {
     margin-bottom: 20px;
 }
 
-/* ---- Decision Result ---- */
+/* ---- Résultat de décision ---- */
 .result-section {
     margin-top: 24px;
     animation: fadeIn 0.4s ease;
@@ -563,7 +563,7 @@ body {
     background: var(--red);
 }
 
-/* ---- SHAP Features ---- */
+/* ---- Features SHAP ---- */
 .shap-list {
     list-style: none;
     margin-top: 10px;
@@ -611,7 +611,7 @@ body {
     background: var(--green-bg);
 }
 
-/* ---- Agent Report ---- */
+/* ---- Rapport Agent ---- */
 .agent-report {
     background: var(--bg-input);
     border: 1px solid var(--border-color);
@@ -642,7 +642,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* ---- Audit Table ---- */
+/* ---- Tableau d'audit ---- */
 .table-container {
     overflow-x: auto;
     margin-top: 14px;
@@ -726,7 +726,7 @@ tbody tr:hover {
     font-size: 13px;
 }
 
-/* ---- Stats Row ---- */
+/* ---- Ligne de stats ---- */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -763,7 +763,7 @@ tbody tr:hover {
     letter-spacing: -0.3px;
 }
 
-/* ---- Section Headers (inside result) ---- */
+/* ---- En-têtes de section (dans le résultat) ---- */
 .section-label {
     font-size: 11px;
     color: var(--text-muted);

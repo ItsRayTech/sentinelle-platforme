@@ -13,10 +13,10 @@ def get_db():
         db.close()
 
 def map_human_to_final(previous_decision: str, human_decision: str) -> str:
-    # Simple mapping for MVP:
-    # - Human APPROVE turns REVIEW into ACCEPT
-    # - Human REJECT turns REVIEW into REJECT
-    # - For other previous decisions, keep previous unless you want overrides everywhere.
+    # Mapping simple pour le MVP :
+    # - APPROVE humain transforme REVIEW en ACCEPT
+    # - REJECT humain transforme REVIEW en REJECT
+    # - Pour les autres décisions, garder la précédente sauf si on veut surcharger partout.
     if previous_decision == "REVIEW":
         return "ACCEPT" if human_decision == "APPROVE" else "REJECT"
     return previous_decision
@@ -40,7 +40,7 @@ def review(decision_id: str, payload: ReviewRequest, db: Session = Depends(get_d
     )
     db.add(review_row)
 
-    # Store final decision while preserving original trace (audit)
+    # Stocker la décision finale tout en préservant la trace originale (audit)
     row.decision = final
     db.commit()
 

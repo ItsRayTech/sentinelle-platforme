@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent
 def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name)
 
-    # Static files (CSS, JS, images)
+    # Fichiers statiques (CSS, JS, images)
     app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
     from prometheus_fastapi_instrumentator import Instrumentator
@@ -29,7 +29,7 @@ def create_app() -> FastAPI:
     app.include_router(explain_router)
     app.include_router(review_router)
 
-    # UI routes (must be last so "/" doesn't shadow API routes)
+    # Routes UI (doit être en dernier pour ne pas masquer les routes API)
     app.include_router(ui_router)
 
     return app

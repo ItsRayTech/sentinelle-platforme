@@ -16,7 +16,7 @@ class ClientPayload(BaseModel):
 class TransactionPayload(BaseModel):
     amount: confloat(gt=0)
     merchant_category: str = Field(..., min_length=2, max_length=64)
-    country: str = Field(..., min_length=2, max_length=2, description="ISO country code (e.g., FR)")
+    country: str = Field(..., min_length=2, max_length=2, description="Code pays ISO (ex: FR)")
     hour: conint(ge=0, le=23)
     is_new_device: bool
     distance_from_home_km: confloat(ge=0, le=20000)

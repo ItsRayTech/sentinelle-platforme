@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     ollama_base_url: str = "http://host.docker.internal:11434"
     ollama_model: str = "llama3.1"
 
-    # If you later use OpenAI / Mistral
+    # Si vous utilisez OpenAI / Mistral plus tard
     openai_base_url: str = "https://api.openai.com/v1"
     openai_api_key: str = ""
 

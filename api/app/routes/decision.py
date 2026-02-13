@@ -33,13 +33,13 @@ async def make_decision(payload: DecisionRequest, db: Session = Depends(get_db))
     FRAUD_SCORE_DIST.observe(fraud_score)
     DECISION_COUNTER.labels(decision=pr.decision, policy_rule=pr.rule).inc()
     
-    # Drift Monitoring
+    # Monitoring de Dérive
     INPUT_INCOME_DIST.observe(payload.client.income_annual)
     INPUT_DEBT_RATIO_DIST.observe(payload.client.debt_to_income)
 
-    # Minimal, consistent "explanations preview"
-    # Credit Risk: SHAP values (Real)
-    # Fraud: Stub for now (until Phase 4b)
+    # Aperçu minimal et cohérent des explications
+    # Risque Crédit : Valeurs SHAP (Réelles)
+    # Fraude : Placeholder pour l'instant (jusqu'à la Phase 4b)
     fraud_preview = [
         FeatureImpact(feature="is_new_device", impact="+"),
         FeatureImpact(feature="hour", impact="+"),
@@ -67,7 +67,7 @@ async def make_decision(payload: DecisionRequest, db: Session = Depends(get_db))
         request_payload=payload.model_dump(),
     )
 
-    # Agent payload (only uses system outputs: no hallucination)
+    # Payload Agent (n'utilise que les sorties système : pas d'hallucination)
     agent_payload = {
         "decision": pr.decision,
         "risk_score": risk_score,

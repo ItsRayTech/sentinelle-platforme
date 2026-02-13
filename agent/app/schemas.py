@@ -14,7 +14,7 @@ class AgentRequest(BaseModel):
     policy_rule: str
     model_versions: dict
     explanations_preview: dict
-    # optional small context
+    # contexte optionnel léger
     locale: Optional[str] = "fr"
 
 class AgentResponse(BaseModel):
