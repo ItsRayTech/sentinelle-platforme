@@ -28,6 +28,22 @@ open http://localhost:3000
 
 ---
 
+## 🎨 Aperçu Visuel
+
+### 🖥️ Dashboard Sentinelle
+*Interface de décision pour les analystes (Risque & Fraude combinés)*
+![Dashboard](docs/images/dashboard.png)
+
+### 📊 Monitoring ML (Grafana)
+*Suivi temps réel : Latence, Volume de décisions, et Dérive des données (Drift)*
+![Grafana](docs/images/grafana.png)
+
+### 🧪 Tracking des modèles (MLflow)
+*Gestion du cycle de vie des modèles, versions et métriques d'entraînement*
+![MLflow](docs/images/mlflow.png)
+
+---
+
 ## 2. Fonctionnalités Clés (MVP)
 - **Endpoint de décision unifié** : `POST /decision` → `ACCEPT / REVIEW / REJECT / ALERT`
 - **Piste d'audit** : chaque décision est stockée avec horodatage, règle de politique et version du modèle
@@ -209,10 +225,33 @@ pytest api/tests
 ```
 Le pipeline GitHub Actions se lance automatiquement à chaque push sur `main`.
 
-## 📈 Supervision & Observabilité
-- **Grafana** (`http://localhost:3000`) : Visualisation des métriques temps réel (Décisions, Scores, Latence).
-- **Prometheus** (`http://localhost:9090`) : Collecte des métriques.
-- **Drift Detection** : Suivi des distributions d'entrée (Revenu, Dette) pour alerter sur le data drift.
+## 📈 Observabilité & Monitoring (Senior++)
+**Infrastructure as Code (IaC)** : La stack de monitoring est entièrement provisionnée par code (Docker, YAML, JSON), garantissant la reproductibilité.
+
+### 1. Métriques Exposées (FastAPI + Prometheus)
+Les métriques sont définies dans `api/app/services/monitoring.py` et exposées sur `/metrics`.
+
+| Métrique | Type | Description |
+|:---|:---:|:---|
+| `decision_total_count_total` | **Counter** | Nombre de décisions par type (`ACCEPT`, `REJECT`...) et règle. |
+| `model_inference_seconds` | **Histogram** | Latence pure du modèle ML (hors réseau/DB). |
+| `risk_score_distribution` | **Histogram** | Distribution des scores pour détecter le drift de sortie. |
+| `model_drift_warning` | **Gauge** | Alerte binaire (0/1) si les entrées dévient de la baseline. |
+
+### 2. Requêtes PromQL (Exemples)
+*Taux de décisions par seconde sur 1 minute :*
+```promql
+sum(rate(decision_total_count_total[1m])) by (decision)
+```
+
+*Latence p95 (95ème centile) :*
+```promql
+histogram_quantile(0.95, sum(rate(model_inference_seconds_bucket[5m])) by (le))
+```
+
+### 3. Dashboard Grafana
+Accessible sur `http://localhost:3000` (admin/admin).
+Le dashboard est provisionné automatiquement via `monitoring/grafana/provisioning`.
 
 ## 📚 Documentation
 - [Guide de Démarrage (Walkthrough)](docs/WALKTHROUGH.md)
