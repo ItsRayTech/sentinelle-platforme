@@ -48,10 +48,18 @@ jobs:
       - name: Build API Image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./api
+          file: ./api/Dockerfile
           push: false
-          tags: risk-fraud-decision-platform-api:latest
+          tags: sentinelle-api:latest
+
+      - name: Build Agent Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./agent
+          file: ./agent/Dockerfile
+          push: false
+          tags: sentinelle-agent:latest
 
       # Agent build is usually the same context/Dockerfile or similar
       # Assuming agent shares the same Dockerfile or has its own.
