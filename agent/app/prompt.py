@@ -15,8 +15,24 @@ def build_prompt(payload: dict) -> str:
     credit_feats = exp.get("credit_top_features", [])
     fraud_feats = exp.get("fraud_top_features", [])
 
+    FEATURE_MAP = {
+        "credit_history_length_months": "Ancienneté crédit",
+        "employment_status": "Statut emploi",
+        "income_annual": "Revenu annuel",
+        "late_payments_12m": "Retards paiement (12m)",
+        "debt_to_income": "Ratio Endettement",
+        "is_new_device": "Nouvel appareil",
+        "hour": "Heure transaction",
+        "distance_from_home_km": "Distance domicile",
+        "num_open_accounts": "Comptes ouverts",
+        "age": "Âge",
+        "amount": "Montant",
+        "merchant_category": "Catégorie marchand",
+        "country": "Pays"
+    }
+
     def fmt_feats(feats):
-        return ", ".join([f'{x.get("feature")}({x.get("impact")})' for x in feats[:3]]) or "n/a"
+        return ", ".join([f'{FEATURE_MAP.get(x.get("feature"), x.get("feature"))} ({x.get("impact")})' for x in feats[:3]]) or "n/a"
 
     return f"""
 Tu es un assistant IA pour un système d'aide à la décision bancaire.

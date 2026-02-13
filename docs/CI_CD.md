@@ -1,34 +1,34 @@
 # CI/CD Pipeline Documentation
 
-This project uses **GitHub Actions** to ensure code quality and deployment readiness.
+Ce projet utilise **GitHub Actions** pour assurer la qualité du code et la préparation au déploiement.
 
-## 🔄 Workflow: `.github/workflows/ci.yml`
+## 🔄 Workflow : `.github/workflows/ci.yml`
 
-Every time you push code to `main` or create a Pull Request, the following jobs run:
+À chaque push sur `main` ou création d'une Pull Request, les jobs suivants sont exécutés :
 
-### 1. 🧪 Test Job (`test`)
-- **Environment**: Ubuntu Latest, Python 3.11
-- **Steps**:
-    1.  Installs dependencies from `ml/requirements.txt` and `api/requirements.txt`.
-    2.  Runs **Pytest** on `api/tests/`.
-- **Goal**: Catch regressions in logic before merging.
+### 1. 🧪 Job de Test (`test`)
+- **Environnement** : Ubuntu Latest, Python 3.11
+- **Étapes** :
+    1.  Installation des dépendances depuis `ml/requirements.txt` et `api/requirements.txt`.
+    2.  Exécution de **Pytest** sur `api/tests/`.
+- **Objectif** : Détecter les régressions logiques avant la fusion (merge).
 
-### 2. 🐳 Build Job (`build-docker`)
-- **Dependency**: Runs only if `test` passes.
-- **Steps**:
-    1.  Builds the Docker image for the API (`Dockerfile`).
-- **Goal**: Ensure the application can be containerized successfully (no missing files, syntax errors in Dockerfile).
+### 2. 🐳 Job de Build (`build-docker`)
+- **Dépendance** : Exécuté uniquement si `test` réussit.
+- **Étapes** :
+    1.  Construction de l'image Docker pour l'API (`Dockerfile`).
+- **Objectif** : Garantir que l'application peut être conteneurisée avec succès (fichiers manquants, erreurs de syntaxe Dockerfile).
 
-## ✅ How to Check Build Status
-1.  Go to the **Actions** tab in the GitHub repository.
-2.  Click on the latest workflow run.
-3.  Green checkmarks indicate success. Red crosses indicate failure (check logs).
+## ✅ Comment Vérifier le Statut du Build
+1.  Allez dans l'onglet **Actions** du dépôt GitHub.
+2.  Cliquez sur la dernière exécution du workflow.
+3.  Les coches vertes indiquent le succès. Les croix rouges indiquent un échec (vérifiez les logs).
 
-## 🛠 Adding New Tests
-Create new test files in `api/tests/` named `test_*.py`.
-Example:
+## 🛠 Ajouter de Nouveaux Tests
+Créez de nouveaux fichiers de test dans `api/tests/` nommés `test_*.py`.
+Exemple :
 ```python
-def test_example():
+def test_exemple():
     assert 1 + 1 == 2
 ```
-They will be automatically picked up by the CI pipeline.
+Ils seront automatiquement pris en compte par le pipeline CI.

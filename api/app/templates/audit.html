@@ -3,23 +3,23 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>📋 Audit Trail</h2>
+    <h2>📋 Historique des Décisions</h2>
     <p>Historique des {{ decisions|length }} dernières décisions tracées.</p>
 </div>
 
 <!-- Stats -->
 <div class="stats-row">
     <div class="stat-card">
-        <div class="stat-label">Total Décisions</div>
+        <div class="stat-label">Total des Dossiers</div>
         <div class="stat-value">{{ decisions|length }}</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label">Acceptées</div>
+        <div class="stat-label">Acceptés</div>
         <div class="stat-value" style="color: var(--accent-green);">{{ decisions|selectattr('decision', 'equalto',
             'ACCEPT')|list|length }}</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label">Rejetées</div>
+        <div class="stat-label">Rejetés</div>
         <div class="stat-value" style="color: var(--accent-red);">{{ decisions|selectattr('decision', 'equalto',
             'REJECT')|list|length }}</div>
     </div>
@@ -33,7 +33,7 @@
 <div class="card">
     <div class="card-header">
         <span class="card-icon">🔍</span>
-        <h3>Décisions Récentes</h3>
+        <h3>Dernières Décisions</h3>
     </div>
 
     {% if decisions %}
@@ -44,8 +44,8 @@
                     <th>ID Décision</th>
                     <th>Date</th>
                     <th>Décision</th>
-                    <th>Risk Score</th>
-                    <th>Fraud Score</th>
+                    <th>Score Risque</th>
+                    <th>Score Fraude</th>
                     <th>Règle</th>
                 </tr>
             </thead>
@@ -61,7 +61,14 @@
                         'REVIEW': 'table-badge-review',
                         'ALERT': 'table-badge-alert'
                         } %}
-                        <span class="table-badge {{ badge.get(d.decision, '') }}">{{ d.decision }}</span>
+                        {% set badge_text = {
+                        'ACCEPT': 'ACCEPTÉ',
+                        'REJECT': 'REJETÉ',
+                        'REVIEW': 'RÉVISION',
+                        'ALERT': 'ALERTE'
+                        } %}
+                        <span class="table-badge {{ badge.get(d.decision, '') }}">{{ badge_text.get(d.decision,
+                            d.decision) }}</span>
                     </td>
                     <td>{{ "%.1f"|format(d.risk_score * 100) }}%</td>
                     <td>{{ "%.1f"|format(d.fraud_score * 100) }}%</td>
@@ -74,7 +81,7 @@
     {% else %}
     <div class="empty-state">
         <div class="icon">📭</div>
-        <p>Aucune décision enregistrée.<br>Soumettez un dossier depuis le Dashboard pour commencer.</p>
+        <p>Aucune décision enregistrée.<br>Soumettez un dossier depuis le Tableau de Bord pour commencer.</p>
     </div>
     {% endif %}
 </div>

@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>🎯 Décision Engine</h2>
+    <h2>🎯 Moteur de Décision</h2>
     <p>Soumettez un dossier client pour obtenir une décision en temps réel.</p>
 </div>
 
@@ -135,8 +135,14 @@
             'REVIEW': '⚠️',
             'ALERT': '🚨'
             } %}
+            {% set badge_text = {
+            'ACCEPT': 'ACCEPTÉ',
+            'REJECT': 'REJETÉ',
+            'REVIEW': 'RÉVISION',
+            'ALERT': 'ALERTE'
+            } %}
             <span class="decision-badge {{ badge_class.get(result.decision, 'badge-review') }}">
-                {{ badge_icon.get(result.decision, '❓') }} {{ result.decision }}
+                {{ badge_icon.get(result.decision, '❓') }} {{ badge_text.get(result.decision, result.decision) }}
             </span>
         </div>
 
@@ -166,16 +172,33 @@
 
 <!-- SHAP Features -->
 <div class="grid-2" style="margin-top: 20px;">
+    {% set feature_map = {
+    'credit_history_length_months': 'Ancienneté crédit',
+    'employment_status': 'Statut emploi',
+    'income_annual': 'Revenu annuel',
+    'late_payments_12m': 'Retards paiement (12m)',
+    'debt_to_income': 'Ratio Endettement',
+    'is_new_device': 'Nouvel appareil',
+    'hour': 'Heure transaction',
+    'distance_from_home_km': 'Distance domicile',
+    'num_open_accounts': 'Comptes ouverts',
+    'age': 'Âge',
+    'amount': 'Montant',
+    'merchant_category': 'Catégorie marchand',
+    'country': 'Pays'
+    } %}
     <div>
         <h4
             style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-            Facteurs Crédit (SHAP)</h4>
+            Facteurs Explicatifs (Crédit)
+        </h4>
         <ul class="shap-list">
             {% for feat in result.explanations_preview.credit_top_features %}
             <li class="shap-item">
-                <span class="shap-feature">{{ feat.feature }}</span>
-                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">{{
-                    feat.impact }}</span>
+                <span class="shap-feature">{{ feature_map.get(feat.feature, feat.feature) }}</span>
+                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">
+                    {{ feat.impact }}
+                </span>
             </li>
             {% endfor %}
         </ul>
@@ -183,13 +206,15 @@
     <div>
         <h4
             style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-            Facteurs Fraude</h4>
+            Facteurs de Fraude
+        </h4>
         <ul class="shap-list">
             {% for feat in result.explanations_preview.fraud_top_features %}
             <li class="shap-item">
-                <span class="shap-feature">{{ feat.feature }}</span>
-                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">{{
-                    feat.impact }}</span>
+                <span class="shap-feature">{{ feature_map.get(feat.feature, feat.feature) }}</span>
+                <span class="shap-impact {{ 'impact-positive' if feat.impact == '+' else 'impact-negative' }}">
+                    {{ feat.impact }}
+                </span>
             </li>
             {% endfor %}
         </ul>
@@ -201,7 +226,8 @@
 <div style="margin-top: 20px;">
     <h4
         style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
-        🤖 Rapport Agent IA</h4>
+        🤖 Rapport de l'Agent IA
+    </h4>
     <div class="agent-report">{{ result.report_summary }}</div>
 </div>
 {% endif %}

@@ -54,7 +54,7 @@ open http://localhost:3000
 ```mermaid
 graph TD
     Client[App Client] -->|POST /decision| API[Gateway FastAPI]
-    API -->|Risk & Fraud Score| ML[Service de Scoring (Credit Risk + Fraud Models)]
+    API -->|Score Risque & Fraude| ML[Service de Scoring (Modèles Risque Crédit + Fraude)]
     API -->|Vérification Règles| Policy[Moteur de Règles]
     API -->|Log Audit| DB[(SQLite/PostgreSQL)]
     API --> Decision[Décision : ACCEPT/REVIEW/REJECT/ALERT]
@@ -156,14 +156,14 @@ curl -X POST "http://localhost:8000/review/dcn_..." \
 
 ## 8. Modèles & Métriques
 
-### ✅ Credit Risk (Supervisé)
+### ✅ Risque de Crédit (Supervisé)
 - Logistic Regression (baseline)
 - XGBoost (challenger)
 - Tracking MLflow activé
 - Sélection automatique du meilleur modèle (AUC + Recall défaut)
 - Artefacts versionnés (`model.joblib`, `metrics.json`)
 
-### ✅ Fraud Detection (Anomalies)
+### ✅ Détection de Fraude (Anomalies)
 - Isolation Forest (contamination calibrée)
 - Normalisation des scores vers [0,1]
 - Évaluation via AUC & Average Precision
@@ -209,7 +209,7 @@ pytest api/tests
 ```
 Le pipeline GitHub Actions se lance automatiquement à chaque push sur `main`.
 
-## 📈 Monitoring & Observability
+## 📈 Supervision & Observabilité
 - **Grafana** (`http://localhost:3000`) : Visualisation des métriques temps réel (Décisions, Scores, Latence).
 - **Prometheus** (`http://localhost:9090`) : Collecte des métriques.
 - **Drift Detection** : Suivi des distributions d'entrée (Revenu, Dette) pour alerter sur le data drift.
@@ -218,8 +218,8 @@ Le pipeline GitHub Actions se lance automatiquement à chaque push sur `main`.
 - [Guide de Démarrage (Walkthrough)](docs/WALKTHROUGH.md)
 - [Fiche Modèle (Model Card)](docs/MODEL_CARD.md)
 - [Fiche de Données (Data Sheet)](docs/DATA_SHEET.md)
-- [Compliance IA (EU AI Act)](docs/AI_COMPLIANCE.md)
-- [CI/CD Guide](docs/CI_CD.md)
+- [Conformité IA (EU AI Act)](docs/AI_COMPLIANCE.md)
+- [Guide CI/CD](docs/CI_CD.md)
 
 ## 12. Données & Avertissement
 Ceci est un projet de démonstration utilisant des données publiques ou synthétiques. Il n'est pas destiné à prendre de vraies décisions de crédit sans validation, gouvernance et revue réglementaire appropriées.
