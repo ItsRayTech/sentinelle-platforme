@@ -219,6 +219,7 @@ Le pipeline GitHub Actions se lance automatiquement à chaque push sur `main`.
 - [Fiche Modèle (Model Card)](docs/MODEL_CARD.md)
 - [Fiche de Données (Data Sheet)](docs/DATA_SHEET.md)
 - [Conformité IA (EU AI Act)](docs/AI_COMPLIANCE.md)
+- [Architecture & Choix Techniques](docs/ARCHITECTURE_ET_CHOIX.md)
 - [Guide CI/CD](docs/CI_CD.md)
 
 ## 12. Données & Avertissement
