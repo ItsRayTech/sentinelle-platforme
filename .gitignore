@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+venv/
+.env
+.DS_Store
+ml/artifacts/
+mlflow/artifacts/
+.coverage
+htmlcov/
