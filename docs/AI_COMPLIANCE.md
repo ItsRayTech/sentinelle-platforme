@@ -1,15 +1,15 @@
 # Documentation de Conformité IA
 
-## AI Act (Haut Risque - Approche Portfolio)
+## AI Act (Haut Risque - Approche Portefeuille)
 
 *   **Logging / Traçabilité** : ✅ (Logs de décision + Versioning de modèle)
 *   **Documentation Technique** : ✅ (Carte du Modèle + Fiche de Données)
 *   **Explicabilité** : ✅ (Importance globale des features + SHAP Local)
 *   **Gouvernance** : ✅ (Couche de politique + Flux de revue humaine)
 *   **Robustesse** : ✅ (Validation Pydantic + Tests unitaires)
-*   **Supervision Humaine** : ✅ (Endpoint REVIEW + Capacité de surcharge)
+*   **Supervision Humaine** : ✅ (Point de terminaison REVIEW + Capacité de surcharge)
 
-## Gestion des Risques (AI Risk Management)
+## Gestion des Risques IA
 
 - Identification des risques liés aux décisions automatisées.
 - Évaluation de l'impact potentiel sur les clients.

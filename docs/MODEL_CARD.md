@@ -46,7 +46,7 @@
 - Fraude organisée non représentée dans le dataset.
 
 ## Conditions d'Utilisation
-*   **Système d'Aide à la Décision** : destiné aux flux de travail "Human-in-the-Loop" (Homme dans la boucle).
+*   **Système d'Aide à la Décision** : destiné aux flux de travail avec "Humain dans la boucle" (Human-in-the-Loop).
 *   **Pas Uniquement Automatisé** : Les décisions à haut risque doivent pouvoir être révisées par un opérateur humain.
 
 ## Monitoring

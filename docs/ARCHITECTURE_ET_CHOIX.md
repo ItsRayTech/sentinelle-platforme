@@ -11,7 +11,7 @@ Ce document détaille la philosophie, l'architecture et les décisions technique
 **Piliers du projet :**
 1.  **Temps réel** : API optimisée pour des réponses < 200ms.
 2.  **Hybride** : Combinaison de règles métiers déterministes et de modèles Machine Learning probabilistes.
-3.  **Human-in-the-loop** : L'IA propose une décision, l'humain valide les cas ambigus ("Zone Grise").
+3.  **Humain dans la boucle (Human-in-the-loop)** : L'IA propose une décision, l'humain valide les cas ambigus ("Zone Grise").
 4.  **Explicabilité** : Chaque décision est justifiée par SHAP et traduite en langage naturel par une IA Générative.
 
 ---
@@ -25,7 +25,7 @@ Le système repose sur une architecture micro-services isolés via Docker :
     *   **Crédit (Supervisé)** : Régression Logistique pour sa transparence et sa robustesse.
     *   **Fraude (Non-supervisé)** : Isolation Forest pour la détection d'anomalies (fraudes inconnues).
 3.  **Agent Explicatif (LLM)** : Service dédié qui consomme les scores bruts et les valeurs SHAP pour générer un rapport narratif en français.
-4.  **Observabilité (Grafana/Prometheus/MLflow)** : Stack de monitoring pour suivre la performance des modèles (Data Drift) et la santé des services en production.
+4.  **Observabilité (Grafana/Prometheus/MLflow)** : Stack de monitoring pour suivre la performance des modèles (Dérive des données / Data Drift) et la santé des services en production.
 
 ---
 
@@ -52,11 +52,11 @@ Chaque technologie a été choisie pour répondre à une contrainte spécifique 
 
 ### Tendre vers l'Explicabilité Totale
 *   **Problème** : Les scores de probabilité (ex: 0.76) sont abstraits pour les conseillers bancaires.
-*   **Solution** : Intégration d'un **Agent LLM** avec un prompt d'ingénierie strict ("Anti-hallucination"). L'IA traduit les données techniques SHAP en phrases claires en français ("Le revenu est le facteur principal du refus").
+*   **Solution** : Intégration d'un **Agent LLM** avec une ingénierie de prompt stricte ("Anti-hallucination"). L'IA traduit les données techniques SHAP en phrases claires en français ("Le revenu est le facteur principal du refus").
 
 ### Gestion des Cas Limites (Edge Cases)
 *   **Problème** : L'automatisation à 100% présente des risques éthiques et financiers.
-*   **Solution** : Implémentation d'une logique de **"Zone Grise" (Review)**. Si le score de risque est intermédiaire, le système ne tranche pas mais envoie le dossier en révision humaine. C'est le principe du "Human-in-the-loop".
+*   **Solution** : Implémentation d'une logique de **"Zone Grise" (Review)**. Si le score de risque est intermédiaire, le système ne tranche pas mais envoie le dossier en révision humaine. C'est le principe de l'**Humain dans la boucle**.
 
 ### Interface Utilisateur "Non-Tech"
 *   **Problème** : Les parties prenantes métier ne peuvent pas tester une API via Swagger/Curl.
@@ -73,7 +73,7 @@ Le projet intègre le "Compliance by Design" :
 
 ---
 
-## 6. Pistes d'Amélioration (Roadmap) 🚀
+## 6. Pistes d'Amélioration (Feuille de route) 🚀
 
 *   **Automatisation du Ré-entraînement** : Coupler la détection de drift (Grafana) à un pipeline Airflow pour relancer l'entraînement automatiquement.
 *   **Scalabilité** : Migration vers Kubernetes (K8s) pour gérer la montée en charge horizontale des conteneurs API.

@@ -12,7 +12,7 @@ Une plateforme orientée production pour la décision de crédit et de fraude en
 
 ## 1. Problème Métier
 Les institutions financières doivent prendre des décisions de crédit et de fraude en temps réel tout en respectant des contraintes réglementaires strictes (RGPD, AI Act).
-Ce projet propose une **plateforme de décision** capable d'évaluer le risque de crédit et de fraude, d'expliquer ses décisions (SHAP), et de permettre une supervision humaine (**Human-in-the-Loop**).
+Ce projet propose une **plateforme de décision** capable d'évaluer le risque de crédit et de fraude, d'expliquer ses décisions (SHAP), et de permettre une supervision humaine (**Humain dans la boucle**).
 
 ---
 
@@ -42,7 +42,7 @@ open http://localhost:3000
   - **SHAP Global** (analyse offline, MLflow)
   - **SHAP Local** (calcul temps réel via LinearExplainer)
 - **Agent IA Générative** : Un agent LLM analyse les résultats techniques pour générer un rapport narratif compréhensible par un humain.
-- **Full MLOps** : Tracking des expérimentations avec MLflow, versioning des modèles.
+- **MLOps Complet** : Suivi des expérimentations avec MLflow, versioning des modèles.
 - **Observabilité** : Dashboard Grafana & Prometheus pour suivre la production et le drift des données.
 - **DevOps & CI/CD** : Déploiement via Docker Compose, Pipeline GitHub Actions pour les tests automatiques.
 - **Base de données** : SQLite (MVP) → PostgreSQL (production-ready)
@@ -157,10 +157,10 @@ curl -X POST "http://localhost:8000/review/dcn_..." \
 ## 8. Modèles & Métriques
 
 ### ✅ Risque de Crédit (Supervisé)
-- Logistic Regression (baseline)
-- XGBoost (challenger)
-- Tracking MLflow activé
-- Sélection automatique du meilleur modèle (AUC + Recall défaut)
+- Régression Logistique (référence)
+- XGBoost (candidat)
+- Suivi MLflow activé
+- Sélection automatique du meilleur modèle (AUC + Rappel défaut)
 - Artefacts versionnés (`model.joblib`, `metrics.json`)
 
 ### ✅ Détection de Fraude (Anomalies)
