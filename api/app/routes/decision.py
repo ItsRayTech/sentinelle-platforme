@@ -11,7 +11,9 @@ from ..services.monitoring import (
     RISK_SCORE_DIST,
     FRAUD_SCORE_DIST,
     INPUT_INCOME_DIST,
-    INPUT_DEBT_RATIO_DIST
+    INPUT_DEBT_RATIO_DIST,
+    MODEL_LATENCY,
+    DRIFT_WARNING
 )
 
 router = APIRouter(tags=["decision"])
@@ -25,7 +27,8 @@ def get_db():
 
 @router.post("/decision", response_model=DecisionResponse)
 async def make_decision(payload: DecisionRequest, db: Session = Depends(get_db)):
-    risk_score, fraud_score, model_versions, shap_impacts = predict_risk_and_fraud(payload)
+    with MODEL_LATENCY.time():
+        risk_score, fraud_score, model_versions, shap_impacts = predict_risk_and_fraud(payload)
     pr = apply_policy(risk_score, fraud_score)
 
     # Monitoring (Prometheus)
@@ -36,6 +39,14 @@ async def make_decision(payload: DecisionRequest, db: Session = Depends(get_db))
     # Monitoring de Dérive
     INPUT_INCOME_DIST.observe(payload.client.income_annual)
     INPUT_DEBT_RATIO_DIST.observe(payload.client.debt_to_income)
+
+    # Simulation alerte drift (règle experte simple pour la démo)
+    # Si revenu > 150k ou debt_ratio > 0.6 => Drift potentiel (population inattendue)
+    is_drift_income = 1 if payload.client.income_annual > 150000 else 0
+    is_drift_dti = 1 if payload.client.debt_to_income > 0.6 else 0
+    
+    DRIFT_WARNING.labels(feature="income_annual").set(is_drift_income)
+    DRIFT_WARNING.labels(feature="debt_to_income").set(is_drift_dti)
 
     # Aperçu minimal et cohérent des explications
     # Risque Crédit : Valeurs SHAP (Réelles)

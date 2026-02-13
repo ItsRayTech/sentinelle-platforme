@@ -1,4 +1,4 @@
-from prometheus_client import Counter, Histogram
+from prometheus_client import Counter, Histogram, Gauge
 
 # Business Metrics
 DECISION_COUNTER = Counter(
@@ -30,4 +30,17 @@ INPUT_DEBT_RATIO_DIST = Histogram(
     "input_debt_ratio_distribution",
     "Distribution du ratio dette/revenu du demandeur",
     buckets=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+)
+
+# Métriques Techniques (Senior++)
+MODEL_LATENCY = Histogram(
+    "model_inference_seconds",
+    "Temps passé dans l'inférence du modèle (hors DB/Network)",
+    buckets=[0.01, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0]
+)
+
+DRIFT_WARNING = Gauge(
+    "model_drift_warning",
+    "Indicateur de drift détecté (1=Drift, 0=Normal)",
+    ["feature"]
 )
