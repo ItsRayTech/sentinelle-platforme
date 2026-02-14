@@ -120,3 +120,15 @@ La documentation complète et bilingue du projet est disponible dans :
 - [`MODEL_CARD.md`](MODEL_CARD.md) : Détails des modèles ML.
 - [`DATA_SHEET.md`](DATA_SHEET.md) : Description des données.
 - [`AI_COMPLIANCE.md`](AI_COMPLIANCE.md) : Conformité AI Act / RGPD.
+
+## 6. Monitoring Avancé (Senior++) 📊
+
+### Infrastructure as Code
+Le dashboard Grafana est désormais entièrement **provisionné par code** (`monitoring/grafana/provisioning`), éliminant toute configuration manuelle.
+
+### Métriques Clés
+- **Latence Modèle** : Histogramme précis du temps d'inférence (hors réseau/DB).
+- **Drift Alert** : Gauge binaire qui passe à 1 si des entrées anormales (Revenu > 150k, Endettement > 0.6) sont détectées.
+- **Business KPI** : Compteur de décisions par type (ACCEPT/REJECT/REVIEW) et distribution des scores.
+
+Accès : http://localhost:3000 (admin/admin) -> Dashboard "Sentinelle ML Dashboard".

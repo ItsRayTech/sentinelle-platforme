@@ -1,6 +1,6 @@
 # 🧭 Architecture & Choix Techniques
 
-Ce document détaille la philosophie, l'architecture et les décisions techniques du projet **Sentinelle**. Il sert de référence pour comprendre le fonctionnement interne de la plateforme et les motivations derrière chaque brique technologique.
+Ce document détaille la philosophie, l'architecture et les décisions techniques du projet **Sentinelle-Plateforme**. Il sert de référence pour comprendre le fonctionnement interne de la plateforme et les motivations derrière chaque brique technologique.
 
 ---
 

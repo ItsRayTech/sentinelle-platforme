@@ -1,4 +1,4 @@
-# Sentinelle – Plateforme de Décision Risque & Fraude
+# Sentinelle-Plateforme – Plateforme de Décision Risque & Fraude
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Production-green)

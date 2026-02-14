@@ -57,13 +57,13 @@
                         "uid": "P1809F7CD0C75ACF3"
                     },
                     "editorMode": "code",
-                    "expr": "sum(decision_total_count)",
+                    "expr": "sum(decision_total_count_total)",
                     "legendFormat": "__auto",
                     "range": true,
                     "refId": "A"
                 }
             ],
-            "title": "Total Decisions",
+            "title": "Total Décisions",
             "type": "stat"
         },
         {
@@ -97,13 +97,13 @@
                         "uid": "P1809F7CD0C75ACF3"
                     },
                     "editorMode": "code",
-                    "expr": "decision_total_count",
+                    "expr": "decision_total_count_total",
                     "legendFormat": "{{decision}}",
                     "range": true,
                     "refId": "A"
                 }
             ],
-            "title": "Decisions by Type",
+            "title": "Décisions par Type",
             "type": "piechart"
         },
         {
@@ -146,7 +146,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "Avg Model Latency (5m)",
+            "title": "Latence Moyenne (5m)",
             "type": "stat"
         },
         {
@@ -189,7 +189,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "Drift Detected",
+            "title": "Alerte Drift",
             "type": "stat",
             "thresholds": {
                 "mode": "absolute",
@@ -242,7 +242,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "Risk Score Distribution (p95)",
+            "title": "Distribution Score Risque (p95)",
             "type": "timeseries"
         },
         {
@@ -277,12 +277,12 @@
                     },
                     "editorMode": "code",
                     "expr": "histogram_quantile(0.95, sum(rate(model_inference_seconds_bucket[5m])) by (le))",
-                    "legendFormat": "Latency p95",
+                    "legendFormat": "Latence p95",
                     "range": true,
                     "refId": "A"
                 }
             ],
-            "title": "Model Latency (p95)",
+            "title": "Latence Modèle (p95)",
             "type": "timeseries"
         }
     ],
@@ -302,7 +302,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Sentinelle ML Dashboard",
+    "title": "Sentinelle-Plateforme ML Dashboard",
     "uid": "sentinelle-v1",
     "version": 1,
     "weekStart": ""

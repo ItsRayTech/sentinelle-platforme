@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    app_name: str = "Sentinelle - Plateforme de Décision Risque & Fraude"
+    app_name: str = "Sentinelle-Plateforme - Plateforme de Décision Risque & Fraude"
     environment: str = "dev"
 
     # Base de données
